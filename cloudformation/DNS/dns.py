@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import time
 
 def get_hostname(kube_svc_name: str) -> str:
   shell_cmd = f"""
@@ -7,20 +8,31 @@ def get_hostname(kube_svc_name: str) -> str:
     | grep \"hostname\" \
     | awk '{{print $3}}'
   """
-  return os.popen(shell_cmd).read().strip()
+  result = os.popen(shell_cmd).read().strip()
+  while not result:
+    print("Hostname is not yet ready, waiting 15 seconds...")
+    time.sleep(15)
+    result = os.popen(shell_cmd).read().strip()
+  print(f"Hostname: {result}")
+  return result
 
 
 def get_lb_name(hostname: str) -> str:
-  return hostname.split('.')[0].split('-')[0]
+  result = hostname.split('.')[0].split('-')[0]
+  print(f"LoadBalancerName: {result}")
+  return result
 
 
 def get_hosted_zone_id(lb_name: str) -> str:
   shell_cmd = f"""
     aws elb describe-load-balancers \
       --output=text \
-      --load-balancer-names={lb_name}
+      --load-balancer-names={lb_name} \
+      --query "LoadBalancerDescriptions[0].CanonicalHostedZoneNameID"
   """
-  return os.popen(shell_cmd).read().strip().split('\t')[2]
+  result = os.popen(shell_cmd).read().strip()
+  print(f"CanonicalHostedZoneNameId: {result}")
+  return result
 
 
 def create_record(stack_name: str,
@@ -39,8 +51,9 @@ def create_record(stack_name: str,
         ParameterKey=TargetHostedZoneId,ParameterValue={hosted_zone_id} \
         ParameterKey=RecordName,ParameterValue={record_name}
   """
-  # return the stack ARN
-  return os.popen(shell_cmd).read().strip()
+  result = os.popen(shell_cmd).read().strip()
+  print(f"Stack ARN: {result}")
+  return result
 
 
 def await_creation(region: str, stack_name: str):
@@ -58,8 +71,8 @@ def main():
   kube_svc_name = "cyanlb"
   stack_name = "CyanDnsRecordSet"
   region = "us-east-2"
-  template_file = "recordset.yaml"
-  record_name = "test-cyan"
+  template_file = "dnsrecordset.yaml"
+  record_name = "cyan"
 
   hostname = get_hostname(kube_svc_name)
   lb_name = get_lb_name(hostname)
