@@ -58,7 +58,7 @@ def main():
   kube_svc_name = "cyanlb"
   stack_name = "CyanDnsRecordSet"
   region = "us-east-2"
-  template_file = "recordset.yaml"
+  template_file = "dnsrecordset.yaml"
   record_name = "cyan"
 
   hostname = get_hostname(kube_svc_name)
