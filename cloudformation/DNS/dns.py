@@ -59,7 +59,7 @@ def main():
   stack_name = "CyanDnsRecordSet"
   region = "us-east-2"
   template_file = "recordset.yaml"
-  record_name = "test-cyan"
+  record_name = "cyan"
 
   hostname = get_hostname(kube_svc_name)
   lb_name = get_lb_name(hostname)
