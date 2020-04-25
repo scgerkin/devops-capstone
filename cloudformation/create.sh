@@ -11,5 +11,5 @@ aws cloudformation create-stack \
 echo "Will wait for stack status 'CREATE_COMPLETE'. No output will be written while waiting."
 echo "Alert will be posted once status is reached."
 echo "This can be safely exited with SIGINT (CTRL+C) without affecting creation."
-aws cloudformation wait stack-create-complete --stack-name $stackName --region=us-east-2
+#aws cloudformation wait stack-create-complete --stack-name $stackName --region=us-east-2
 echo "Stack '$stackName' is created."
