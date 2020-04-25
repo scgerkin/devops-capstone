@@ -1,0 +1,35 @@
+jenkins:
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+  crumbIssuer:
+    standard:
+      excludeClientIPFromCrumb: false
+  disableRememberMe: true
+unclassified:
+  gitHubConfiguration:
+    apiRateLimitChecker: ThrottleForNormalize
+  gitHubPluginConfig:
+    configs:
+    - credentialsId: "github"
+    hookUrl: "http://jenkins.scgrk.com/github-webhook/"
+  gitSCM:
+    createAccountBasedOnEmail: false
+    showEntireCommitSummaryInChanges: false
+    useExistingAccountWithSameEmail: false
+  location:
+    adminAddress: "stephen.gerkin@scgrk.com"
+    url: "http://jenkins.scgrk.com"
+tool:
+  git:
+    installations:
+    - home: "/usr/bin/git"
+      name: "Default"
+  maven:
+    installations:
+    - name: "maven"
+      properties:
+      - installSource:
+          installers:
+          - maven:
+              id: "3.6.3"

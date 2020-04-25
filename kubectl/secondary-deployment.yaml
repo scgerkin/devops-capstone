@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cyan-green-deployment
+  labels:
+    app: cyan-update
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: cyan-update
+  template:
+    metadata:
+      labels:
+        app: cyan-update
+    spec:
+      containers:
+      - name: cyan-update
+        image: scgerkin/cyan-app:0.0.2-green
+        ports:
+        - containerPort: 8080

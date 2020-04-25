@@ -1,0 +1,21 @@
+Parameters:
+  Target:
+    Description: The target for the record set
+    Type: String
+  TargetHostedZoneId:
+    Description: The Hosted Zone ID for the target.
+    Type: String
+  RecordName:
+    Description: The sub-domain to use
+    Type: String
+
+Resources:
+  DnsRecordSet:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      AliasTarget:
+        DNSName: !Ref Target
+        HostedZoneId: !Ref TargetHostedZoneId
+      HostedZoneId: Z2FDYX3ILDVKMI
+      Name: !Sub ${RecordName}.scgrk.com
+      Type: A

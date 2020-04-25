@@ -1,0 +1,166 @@
+Description: >
+  Full stack for Capstone project Jenkins box.
+
+Parameters:
+  EnvironmentName:
+    Type: String
+  InstanceType:
+    Type: String
+  ImageId:
+    Description: ImageId to use for the instance. Should be an Ubuntu 18.04 AMI for the region.
+    Type: String
+  IamInstanceProfile:
+    Type: String
+  AccessCidr:
+    Type: String
+  HostedZoneId:
+    Type: String
+  KeyName:
+    Type: String
+
+Resources:
+  Vpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}::Vpc
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Ref EnvironmentName
+  InternetGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref Vpc
+  PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref Vpc
+      AvailabilityZone: !Select [ 0, !GetAZs '' ]
+      CidrBlock: 10.0.0.0/24
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value:  !Sub ${EnvironmentName}::PublicSubnet
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref Vpc
+      Tags:
+        - Key: Name
+          Value:  !Sub ${EnvironmentName}::PublicRouteTable
+  DefaultPublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: InternetGatewayAttachment
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+  PublicSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet
+  JenkinsBoxSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: SSH ingress on specific IP. HTTP ingress for any (for accessing Jenkins container).
+      VpcId: !Ref Vpc
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}::JenkinsBoxSecurityGroup
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Ref AccessCidr
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+          # Jenkins ports, inter-network only
+        - IpProtocol: "-1"
+          FromPort: 8080
+          ToPort: 8080
+          CidrIp: 10.0.0.0/24
+        - IpProtocol: "-1"
+          FromPort: 50000
+          ToPort: 50000
+          CidrIp: 10.0.0.0/24
+      SecurityGroupEgress:
+        - IpProtocol: "-1"
+          FromPort: 0
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+  JenkinsBox:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId:  !Ref ImageId
+      IamInstanceProfile: !Ref IamInstanceProfile
+      KeyName: !Ref KeyName
+      SubnetId: !Ref PublicSubnet
+      SecurityGroupIds:
+        - Ref: JenkinsBoxSecurityGroup
+      Tags:
+        - Key: Name
+          Value: JenkinsBox
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          apt-get update && apt update
+          apt install awscli -y
+          su -c \
+          "git clone --depth 1 https://github.com/scgerkin/udacity-cdoend-capstone.git /home/ubuntu/capstone" \
+          -s /bin/sh ubuntu
+          aws s3 cp s3://scgrk.storage/.secret/jenkins /home/ubuntu/ --recursive
+          cp /home/ubuntu/capstone/.cloudformation/JenkinsBox/setup.sh setup.sh
+          chmod +x setup.sh
+          ./setup.sh
+          rm setup.sh
+  ElasticIp:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref JenkinsBox
+  DnsRecordSet:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      Name: jenkins.scgrk.com
+      Type: A
+      TTL: 300
+      ResourceRecords:
+        - Ref: ElasticIp
+
+Outputs:
+  Vpc:
+    Description: ID of the VPC for this environment.
+    Value: !Ref Vpc
+    Export:
+      Name: !Sub ${EnvironmentName}::Vpc
+  PublicSubnet:
+    Description: ID of the public subnet for this environment.
+    Value: !Ref PublicSubnet
+    Export:
+      Name: !Sub ${EnvironmentName}::PublicSubnet
+  ElasticIp:
+    Description: The EIP pointing to the EC2 instance of the stack.
+    Value: !Ref ElasticIp
+    Export:
+      Name: !Sub ${EnvironmentName}::ElasticIp
+  DnsRecordSet:
+    Description: The value of the domain name created for the EIP.
+    Value: !Ref DnsRecordSet
+    Export:
+      Name: !Sub ${EnvironmentName}::DnsRecordSet
+  JenkinsBox:
+    Description: ID of the EC2 instance of this stack.
+    Value: !Ref JenkinsBox
+    Export:
+      Name: !Sub ${EnvironmentName}::JenkinsBox

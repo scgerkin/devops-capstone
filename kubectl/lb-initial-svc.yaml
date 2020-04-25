@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: cyanlb
+  labels:
+    app: cyanlb
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: cyan-stable
+  type: LoadBalancer

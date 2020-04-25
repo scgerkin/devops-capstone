@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cyan-blue-deployment
+  labels:
+    app: cyan-stable
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: cyan-stable
+  template:
+    metadata:
+      labels:
+        app: cyan-stable
+    spec:
+      containers:
+      - name: cyan-stable
+        image: scgerkin/cyan-app:0.0.2-blue
+        ports:
+        - containerPort: 8080
