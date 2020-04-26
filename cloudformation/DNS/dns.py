@@ -1,8 +1,30 @@
 #!/usr/bin/env python3
 import os
 import time
+import sys
 
-def get_hostname(kube_svc_name: str) -> str:
+kube_svc_name = "cyanlb"
+stack_name = "CyanDnsRecordSet"
+region = "us-east-2"
+template_file = "dnsrecordset.yaml"
+record_name = "cyan"
+
+
+def set_args():
+  if len(sys.argv) == 1:
+    # use defaults above
+    return
+  elif len(sys.argv) == 6:
+    kube_svc_name = sys.argv[1]
+    stack_name = sys.argv[2]
+    region = sys.argv[3]
+    template_file = sys.argv[4]
+    record_name = sys.argv[5]
+  else:
+    raise Exception("Invalid number of arguments.")
+
+
+def get_hostname() -> str:
   shell_cmd = f"""
     kubectl get svc {kube_svc_name} -o yaml \
     | grep \"hostname\" \
@@ -35,12 +57,7 @@ def get_hosted_zone_id(lb_name: str) -> str:
   return result
 
 
-def create_record(stack_name: str,
-                  region: str,
-                  template_file: str,
-                  hostname: str,
-                  hosted_zone_id: str,
-                  record_name: str) -> str:
+def create_record(hostname: str, hosted_zone_id: str) -> str:
   shell_cmd = f"""
     aws cloudformation create-stack \
       --stack-name {stack_name} \
@@ -68,20 +85,14 @@ def await_creation(region: str, stack_name: str):
 
 
 def main():
-  kube_svc_name = "cyanlb"
-  stack_name = "CyanDnsRecordSet"
-  region = "us-east-2"
-  template_file = "dnsrecordset.yaml"
-  record_name = "cyan"
-
-  hostname = get_hostname(kube_svc_name)
+  hostname = get_hostname()
   lb_name = get_lb_name(hostname)
   hosted_zone_id = get_hosted_zone_id(lb_name)
-  stack_arn = create_record(stack_name, region, template_file, hostname,
-      hosted_zone_id, record_name)
+  stack_arn = create_record(hostname, hosted_zone_id)
   await_creation(region, stack_name)
   print(f"http://{record_name}.scgrk.com")
 
 
 if __name__ == "__main__":
+  set_args()
   main()
