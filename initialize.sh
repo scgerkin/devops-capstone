@@ -9,7 +9,13 @@ alert () {
 # Create JenkinsBox instance
 alert "Creating Jenkins machine..."
 cd cloudformation
-./create.sh JenkinsBox
+stackName=JenkinsBox
+aws cloudformation create-stack \
+  --stack-name $stackName \
+  --region=us-east-2 \
+  --template-body file://$(pwd)/$stackName/stack.yaml \
+  --parameters file://$(pwd)/.secrets/$stackName.json \
+  --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"
 
 # Set up initial EKS cluster
 alert "Setting up initial EKS cluster..."
