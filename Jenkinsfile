@@ -19,16 +19,6 @@ pipeline {
         sh 'mvn checkstyle:check'
       }
     }
-    stage ('Compile Sources') {
-      steps {
-        sh 'mvn compile'
-      }
-    }
-    stage ('Compile Test Sources') {
-      steps {
-        sh 'mvn test-compile'
-      }
-    }
     stage ('Run unit tests') {
       steps {
         sh 'mvn test'
@@ -50,6 +40,11 @@ pipeline {
       }
     }
     stage ('Build Docker image') {
+      when {
+        not {
+          branch 'master'
+        }
+      }
       steps {
         script {
           appName = sh(returnStdout: true, script: "mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout")
