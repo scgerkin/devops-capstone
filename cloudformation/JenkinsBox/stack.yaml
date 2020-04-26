@@ -117,10 +117,10 @@ Resources:
           apt-get update && apt update
           apt install awscli -y
           su -c \
-          "git clone --depth 1 https://github.com/scgerkin/udacity-cdoend-capstone.git /home/ubuntu/capstone" \
+          "git clone --depth 1 https://github.com/scgerkin/devops-capstone.git /home/ubuntu/capstone" \
           -s /bin/sh ubuntu
           aws s3 cp s3://scgrk.storage/.secret/jenkins /home/ubuntu/ --recursive
-          cp /home/ubuntu/capstone/.cloudformation/JenkinsBox/setup.sh setup.sh
+          cp /home/ubuntu/capstone/cloudformation/JenkinsBox/setup.sh setup.sh
           chmod +x setup.sh
           ./setup.sh
           rm setup.sh

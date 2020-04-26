@@ -7,9 +7,8 @@ groupadd docker
 gpasswd -a ubuntu docker
 
 
-mkdir -p /home/ubuntu/.kube
 mkdir -p /home/ubuntu/jenkins_data
-cd /home/ubuntu/capstone/.jenkins
+cd /home/ubuntu/capstone/jenkins
 docker build --tag=scgerkin/jenkins --rm .
 docker run \
 --name jenkins \
