@@ -28,3 +28,6 @@ cd ../cloudformation/DNS
 ./dns.py
 
 # TODO: Update aws-auth ConfigMap with Jenkins IAM user
+alert "Updating kubectl ConfigMap with Jenkins user ARN..."
+cd ../../eksctl
+./edit-configmap.py
