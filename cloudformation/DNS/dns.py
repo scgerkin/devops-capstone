@@ -80,6 +80,7 @@ def main():
   stack_arn = create_record(stack_name, region, template_file, hostname,
       hosted_zone_id, record_name)
   await_creation(region, stack_name)
+  print(f"http://{record_name}.scgrk.com")
 
 
 if __name__ == "__main__":
