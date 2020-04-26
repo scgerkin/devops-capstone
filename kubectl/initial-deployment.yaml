@@ -17,9 +17,10 @@ spec:
       containers:
       - name: cyan-blue
         image: scgerkin/cyan-app:0.0.2-blue
-        node-class: "blue-workers"
         ports:
-        - containerPort: 8080
+          - containerPort: 8080
+      nodeSelector:
+        node-class: "blue-workers"
 ---
 kind: Service
 apiVersion: v1

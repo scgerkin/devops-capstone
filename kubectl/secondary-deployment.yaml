@@ -17,9 +17,10 @@ spec:
       containers:
       - name: cyan-green
         image: scgerkin/cyan-app:0.0.2-green
-        node-class: "green-workers"
         ports:
-        - containerPort: 8080
+          - containerPort: 8080
+      nodeSelector:
+        node-class: "green-workers"
 ---
 kind: Service
 apiVersion: v1
