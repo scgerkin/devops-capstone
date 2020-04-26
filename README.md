@@ -39,8 +39,8 @@ The process includes:
     - Artifacts should not be present already, but this adds an extra level of redundancy at little cost.
 - Linting Java files according to the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html).
     - Any failure in linting will cause an early failure of the pipeline, but it would be better to automate linting and fixing small problems where possible.
-- Compiling application source code and test source code.
 - Running unit tests written in jUnit with the Maven test runner.
+    - Maven compiles sources before running tests automatically, so this is not included.
     - At this point, we would also want to consider outputting the results into a file (particularly for failure).
 - Packaging artifacts as a `.jar` file.
 - Running automated tools on compiled `.class` files.
