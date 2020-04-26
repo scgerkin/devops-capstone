@@ -3,19 +3,34 @@ kind: Deployment
 metadata:
   name: cyan-blue-deployment
   labels:
-    app: cyan-stable
+    app: cyan-blue
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: cyan-stable
+      app: cyan-blue
   template:
     metadata:
       labels:
-        app: cyan-stable
+        app: cyan-blue
     spec:
       containers:
-      - name: cyan-stable
+      - name: cyan-blue
         image: scgerkin/cyan-app:0.0.2-blue
+        node-class: "blue-workers"
         ports:
         - containerPort: 8080
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: cyanlb-blue
+  labels:
+    app: cyanlb-blue
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: cyan-blue
+  type: LoadBalancer

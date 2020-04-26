@@ -6,7 +6,7 @@ metadata:
   region: us-east-2
 
 nodeGroups:
-  - name: green-group
+  - name: green
     instanceType: t2.micro
     minSize: 1
     desiredCapacity: 2

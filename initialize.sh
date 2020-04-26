@@ -26,7 +26,6 @@ eksctl create cluster -f initial-cluster.yaml
 alert "Setting up initial deployment and load balancer..."
 cd ../kubectl
 kubectl apply -f initial-deployment.yaml
-kubectl apply -f initial-lb-svc.yaml
 
 # Set up initial DNS to the load balancer
 alert "Setting up DNS record set for load balancer..."

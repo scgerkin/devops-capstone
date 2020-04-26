@@ -3,7 +3,7 @@ import os
 import time
 import sys
 
-kube_svc_name = "cyanlb"
+kube_svc_name = "cyanlb-blue"
 stack_name = "CyanDnsRecordSet"
 region = "us-east-2"
 template_file = "dnsrecordset.yaml"
