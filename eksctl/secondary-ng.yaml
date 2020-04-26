@@ -1,0 +1,19 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: Capstone
+  region: us-east-2
+
+nodeGroups:
+  - name: green-group
+    instanceType: t2.micro
+    minSize: 1
+    desiredCapacity: 2
+    maxSize: 4
+    labels:
+      nodegroup-type: green-workers
+      node-class: "green-workers"
+    iam:
+      withAddonPolicies:
+        autoScaler: true
