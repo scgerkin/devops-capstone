@@ -6,8 +6,8 @@ More information is forthcoming.
 ## Technologies
 - Jenkins for building artifacts and Docker images
 - Amazon Web Services (AWS) Elastic Kubernetes Service (EKS)
-- AWS CloudFormation for Infrastructre as Code
-- [eksctl](https://eksctl.io) for simple(ish) management of EKS resources.
+- AWS CloudFormation for Infrastructure as Code
+- [eksctl](https://eksctl.io) for simple management of EKS resources.
 
 ## General Information
 Under Construction.
