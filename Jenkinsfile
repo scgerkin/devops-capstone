@@ -156,11 +156,14 @@ pipeline {
         }
         script {
           input(message: "Transition Green deployment to Master Track?" )
+          docker.withRegistry('', registryCreds) { image.push("lts") }
+          imageName = "scgerkin/cyan-app:lts"
+          sh "sed -i \"/image:/c\\        image: $imageName\" kubectl/initial-deployment.yaml"
+          sh 'kubectl apply -f kubectl/initial-deployment.yaml'
           sh 'kubectl delete -f kubectl/secondary-deployment.yaml'
           //fixme: hack
           sh 'sleep 60'
           sh 'eksctl delete nodegroup -f eksctl/secondary-ng.yaml --approve'
-          docker.withRegistry('', registryCreds) { image.push("lts") }
         }
       }
     }
