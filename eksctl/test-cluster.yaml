@@ -1,0 +1,19 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: FeatureTest
+  region: us-east-2
+
+nodeGroups:
+  - name: feature-drones
+    instanceType: t2.micro
+    minSize: 1
+    desiredCapacity: 2
+    maxSize: 4
+    labels:
+      nodegroup-type: test-workers
+      node-class: "test-workers"
+    iam:
+      withAddonPolicies:
+        autoScaler: true
