@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cyan-test-deployment
+  labels:
+    app: cyan-test
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cyan-test
+  template:
+    metadata:
+      labels:
+        app: cyan-test
+    spec:
+      containers:
+      - name: cyan-test
+        image: scgerkin/cyan-app:<APPVERSION>
+        ports:
+          - containerPort: 8080
+      nodeSelector:
+        node-class: "test-workers"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: cyanlb-test
+  labels:
+    app: cyanlb-test
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: cyan-test
+  type: LoadBalancer
