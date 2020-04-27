@@ -10,6 +10,6 @@ public class CyanController {
   @GetMapping("/")
   public ModelAndView getIndex()
   {
-    return new ModelAndView("index");
+    return new ModelAndView("index"); 
   }
 }
