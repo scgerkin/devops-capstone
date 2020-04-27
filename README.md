@@ -1,19 +1,42 @@
 # Cloud DevOps Nanodegree Capstone
 An automated CI/CD pipeline with a blue/green deployment system.
 
-More information is forthcoming.
-
 ## Technologies
-- Jenkins for building artifacts and Docker images
-- Amazon Web Services (AWS) Elastic Kubernetes Service (EKS)
-- AWS CloudFormation for Infrastructure as Code
+- Jenkins for building artifacts and Docker images.
+
+- Amazon Web Services (AWS) Elastic Kubernetes Service (EKS).
+- AWS CloudFormation for Infrastructure as Code.
 - [eksctl](https://eksctl.io) for simple management of EKS resources.
 
-## General Information
-Under Construction.
+## Initialization
+The full project is based on pushing automation to the extreme. Once I got started, I just kept going. Initialization is done by running the [`initialize.sh`](./initialize.sh) script to
+1. Create an EC2 that hosts Jenkins inside a Docker container
+    - Using the Jenkins Infrastructure as Code (IaC) plugin, everything necessary to start building pipelines is set up. All that is required is to login.
+    - Additionally, I built a Docker image that automates Jenkins setup so the only thing required is to create the [`JenkinsBox`](./cloudformation/JenkinsBox/stack.yaml) stack using the `aws-cli`. More information about this Jenkins build is available in the `jenkins` folder.
+1. Create an EKS cluster and node group to host the Cyan App Docker container on a Kubernetes cluster.
+    - This in particular can take 15-20 minutes!
+    - `eksctl` automatically creates a full Cloud Formation stack with everything EKS will need to function including...
+        - A VPC
+        - Private and public subnets
+        - Appropriate security groups and roles
+        - A `Control Plane` for Kubernetes
+        - An auto-scaling EC2 node group.
+1. Create a DNS record that points to the Load Balancer created by Kubernetes.
+    - This is accomplished with the [`dns.py`](./cloudformation/DNS/dns.py) script and the Cloud Formation template [`dnsrecordset.yaml`](./cloudformation/DNS/dnsrecordset.yaml)
 
-## Jenkins Component
-The Jenkins service lives within a Docker container built using the items in the [jenkins](./jenkins) folder.
+
+Here is the output from running this command:
+![Terminal Output from Initialization](./screenshots/initialization/terminal-output.jpg)
+Once this is finished, everything is ready to go! Logging into Jenkins will allow setup of a pipeline for automated CI/CD.
+
+The initial application is ready to be used and can be accessed from the endpoint provided by Kubernetes
+![K8 to Cyan App](./screenshots/initialization/app-at-lb.jpg)
+Or by using the DNS record created during initialization.
+![DNS to Cyan App](./screenshots/initialization/app-at-dns.jpg)
+
+## Logging in to Jenkins
+The `JenkinsBox` stack creates a DNS record for easy access to the GUI or for ssh without needing to remember an IP address or AWS DNS.
+![Logging into Jenkins](./screenshots/initialization/login-to-jenkins.jpg)
 
 ## Demonstration Application - "Cyan App"
 ### When you combine blue with green, the resultant color is cyan. Hence, Cyan App!
