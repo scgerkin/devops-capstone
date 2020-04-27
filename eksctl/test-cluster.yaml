@@ -2,18 +2,18 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: Capstone
+  name: FeatureTest
   region: us-east-2
 
 nodeGroups:
-  - name: blue
+  - name: feature-drones
     instanceType: t2.micro
     minSize: 2
     desiredCapacity: 4
     maxSize: 8
     labels:
-      nodegroup-type: blue-workers
-      node-class: "blue-workers"
+      nodegroup-type: test-workers
+      node-class: "test-workers"
     iam:
       withAddonPolicies:
         autoScaler: true
