@@ -1,2 +1,7 @@
 *.secret
 *.secrets
+/.project
+/.classpath
+/.factorypath
+/target
+/.settings
