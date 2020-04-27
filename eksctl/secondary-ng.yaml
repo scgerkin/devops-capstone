@@ -6,14 +6,14 @@ metadata:
   region: us-east-2
 
 nodeGroups:
-  - name: blue
+  - name: green
     instanceType: t2.micro
     minSize: 1
     desiredCapacity: 2
     maxSize: 4
     labels:
-      nodegroup-type: blue-workers
-      node-class: "blue-workers"
+      nodegroup-type: green-workers
+      node-class: "green-workers"
     iam:
       withAddonPolicies:
         autoScaler: true

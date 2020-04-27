@@ -3,19 +3,35 @@ kind: Deployment
 metadata:
   name: cyan-green-deployment
   labels:
-    app: cyan-update
+    app: cyan-green
 spec:
-  replicas: 4
+  replicas: 2
   selector:
     matchLabels:
-      app: cyan-update
+      app: cyan-green
   template:
     metadata:
       labels:
-        app: cyan-update
+        app: cyan-green
     spec:
       containers:
-      - name: cyan-update
+      - name: cyan-green
         image: scgerkin/cyan-app:0.0.2-green
         ports:
-        - containerPort: 8080
+          - containerPort: 8080
+      nodeSelector:
+        node-class: "green-workers"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: cyanlb-green
+  labels:
+    app: cyanlb-green
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: cyan-green
+  type: LoadBalancer

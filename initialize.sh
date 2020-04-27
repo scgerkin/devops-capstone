@@ -9,7 +9,13 @@ alert () {
 # Create JenkinsBox instance
 alert "Creating Jenkins machine..."
 cd cloudformation
-./create.sh JenkinsBox
+stackName=JenkinsBox
+aws cloudformation create-stack \
+  --stack-name $stackName \
+  --region=us-east-2 \
+  --template-body file://$(pwd)/$stackName/stack.yaml \
+  --parameters file://$(pwd)/.secrets/$stackName.json \
+  --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"
 
 # Set up initial EKS cluster
 alert "Setting up initial EKS cluster..."
@@ -20,7 +26,6 @@ eksctl create cluster -f initial-cluster.yaml
 alert "Setting up initial deployment and load balancer..."
 cd ../kubectl
 kubectl apply -f initial-deployment.yaml
-kubectl apply -f initial-lb-svc.yaml
 
 # Set up initial DNS to the load balancer
 alert "Setting up DNS record set for load balancer..."
