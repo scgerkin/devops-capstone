@@ -23,9 +23,14 @@ The full project is based on pushing automation to the extreme. Once I got start
 1. Create a DNS record that points to the Load Balancer created by Kubernetes.
     - This is accomplished with the [`dns.py`](./cloudformation/DNS/dns.py) script and the Cloud Formation template [`dnsrecordset.yaml`](./cloudformation/DNS/dnsrecordset.yaml)
 
+This is a template of the stack created by `eksctl`:
+![Cluster Stack Diagram](./screenshots/cluster-stack-template.jpg)
 
 Here is the output from running this command:
 ![Terminal Output from Initialization](./screenshots/initialization/terminal-output.jpg)
+
+And the AWS console shows our stacks are created:
+![](./screenshots/green-dns-stack-creation.jpg)
 Once this is finished, everything is ready to go! Logging into Jenkins will allow setup of a pipeline for automated CI/CD.
 
 The initial application is ready to be used and can be accessed from the endpoint provided by Kubernetes
