@@ -3,7 +3,6 @@ An automated CI/CD pipeline with a blue/green deployment system.
 
 ## Technologies
 - Jenkins for building artifacts and Docker images.
-
 - Amazon Web Services (AWS) Elastic Kubernetes Service (EKS).
 - AWS CloudFormation for Infrastructure as Code.
 - [eksctl](https://eksctl.io) for simple management of EKS resources.
@@ -133,4 +132,4 @@ A fully completed build is done! Kubernetes is now told to pull the latest Docke
 ## Last thoughts
 I've left out some of the screenshots and overall build process from above. While doing the build, I forgot to take some screenshots at some points and had to patch things together from when I remembered during various phases, but I think you get the overall picture. The code tells the real story!
 
-This project was extremely challenging, engaging, and very rewarding! One month ago, I barely knew what CI/CD was and now I have a much better understanding of the benefits of using it, but also what goes into creating it. I plan to add more information to this later, so check back in a week or so!
+This project was extremely challenging, engaging, and very rewarding! One month ago, I barely knew what CI/CD was and now I have a much better understanding of the benefits of using it, but also what goes into creating it. Everything in this project is a bit fragile and some things are held together by a shoe-string. However, now that I have a better understanding of how things work, I can work to make things more resilient and automated going forward!
