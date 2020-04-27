@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.29">
+<file name="/home/ubuntu/development/devops-capstone/src/main/java/com/scgrk/cyanapp/CyanAppApplication.java">
+</file>
+<file name="/home/ubuntu/development/devops-capstone/src/main/java/com/scgrk/cyanapp/CyanController.java">
+<error line="12" column="3" severity="error" message="&apos;{&apos; at column 3 should be on the previous line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+</file>
+<file name="/home/ubuntu/development/devops-capstone/src/main/resources/application.properties">
+</file>
+</checkstyle>

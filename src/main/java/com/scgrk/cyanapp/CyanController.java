@@ -8,7 +8,8 @@ import org.springframework.web.servlet.ModelAndView;
 public class CyanController {
 
   @GetMapping("/")
-  public ModelAndView getIndex() {
+  public ModelAndView getIndex()
+  {
     return new ModelAndView("index");
   }
 }
