@@ -8,9 +8,9 @@ metadata:
 nodeGroups:
   - name: blue
     instanceType: t2.micro
-    minSize: 1
-    desiredCapacity: 2
-    maxSize: 4
+    minSize: 2
+    desiredCapacity: 4
+    maxSize: 8
     labels:
       nodegroup-type: blue-workers
       node-class: "blue-workers"
